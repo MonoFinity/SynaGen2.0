@@ -15,7 +15,7 @@ app.use(fileUpload({
 }));
 
 // Serve static files from public directory
-app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 
 // Track GPU/system info
 let systemInfo = {
@@ -32,7 +32,7 @@ const initPythonEnvironment = async () => {
   try {
     console.log("Checking GPU and system configuration...");
     const result = await new Promise((resolve, reject) => {
-      PythonShell.run('spark_bridge.py', {
+      PythonShell.run('../python/spark_bridge.py', {
         mode: 'text',
         pythonPath: 'python',
         args: ['--action', 'list_voices']
@@ -590,7 +590,7 @@ app.get('/spark-tts', async (req, res) => {
 // Function to refresh the voice list
 async function refreshVoiceList() {
   return new Promise((resolve, reject) => {
-    PythonShell.run('spark_bridge.py', {
+    PythonShell.run('../python/spark_bridge.py', {
       mode: 'text',
       pythonPath: 'python',
       args: ['--action', 'list_voices']
@@ -646,10 +646,10 @@ app.post('/api/tts', async (req, res) => {
     
     // Generate a unique filename
     const timestamp = Date.now();
-    const outputPath = path.join(__dirname, 'public', 'audio', `output_${timestamp}.wav`);
+    const outputPath = path.join(__dirname, '..', 'public', 'audio', `output_${timestamp}.wav`);
 
     // Make sure the audio directory exists
-    fs.mkdirSync(path.join(__dirname, 'public', 'audio'), { recursive: true });
+    fs.mkdirSync(path.join(__dirname, '..', 'public', 'audio'), { recursive: true });
     
     // Set up Python shell options
     const options = {
@@ -666,13 +666,13 @@ app.post('/api/tts', async (req, res) => {
     if (req.body.voiceId) {
       options.args.push('--voice-id', req.body.voiceId);
     } else if (req.files && req.files.customVoice) {
-      const voicePath = path.join(__dirname, 'public', 'audio', `voice_${timestamp}.wav`);
+      const voicePath = path.join(__dirname, '..', 'public', 'audio', `voice_${timestamp}.wav`);
       await req.files.customVoice.mv(voicePath);
       options.args.push('--custom-voice', voicePath);
     }
     
     // Run the Python script
-    PythonShell.run('spark_bridge.py', options).then(results => {
+    PythonShell.run('../python/spark_bridge.py', options).then(results => {
       console.log("Raw TTS output:", results);
       
       // Find the last valid JSON output (there might be initial status messages)
@@ -731,7 +731,7 @@ app.post('/api/tts', async (req, res) => {
       
       // Clean up the voice file if it was uploaded
       if (req.files && req.files.customVoice) {
-        const voicePath = path.join(__dirname, 'public', 'audio', `voice_${timestamp}.wav`);
+        const voicePath = path.join(__dirname, '..', 'public', 'audio', `voice_${timestamp}.wav`);
         if (fs.existsSync(voicePath)) {
           fs.unlinkSync(voicePath);
         }

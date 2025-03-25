@@ -3,7 +3,7 @@ import os
 from typing import Dict, Optional
 
 class VoiceConfig:
-    CONFIG_FILE = 'voice_registry.json'
+    CONFIG_FILE = '../config/voice_registry.json'
     
     def __init__(self):
         self.config_path = os.path.join(os.path.dirname(__file__), self.CONFIG_FILE)
