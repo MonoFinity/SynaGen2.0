@@ -1,0 +1,18 @@
+{
+  "default": {
+    "model_dir": "pretrained_models/Spark-TTS-0.5B",
+    "display_name": "Default Voice"
+  },
+  "male_deep": {
+    "model_dir": "pretrained_models/Spark-TTS-0.5B",
+    "display_name": "Male Deep Voice"
+  },
+  "female_professional": {
+    "model_dir": "pretrained_models/Spark-TTS-0.5B",
+    "display_name": "Female Professional"
+  },
+  "female": {
+    "model_dir": "pretrained_models/Spark-TTS-0.5B",
+    "display_name": "Female Voice"
+  }
+}
